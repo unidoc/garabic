@@ -1,4 +1,4 @@
-//Package garabic provides a set of functions for Arabic text processing in golang
+// Package garabic provides a set of functions for Arabic text processing in golang.
 package garabic
 
 import (
@@ -11,20 +11,20 @@ import (
 	"golang.org/x/text/transform"
 )
 
-//letterGroup represents the letter and bounding letters
+// letterGroup represents the letter and bounding letters.
 type letterGroup struct {
 	backLetter  rune
 	letter      rune
 	frontLetter rune
 }
 
-//letterShape represents all shapes of arabic letters in a word
-// https://web.stanford.edu/dept/lc/arabic/alphabet/incontextletters.html
+// letterShape represents all shapes of arabic letters in a word
+// https://web.stanford.edu/dept/lc/arabic/alphabet/incontextletters.html.
 type letterShape struct {
 	Independent, Initial, Medial, Final rune
 }
 
-//Map of different shapes of arabic alphabet
+// Map of different shapes of arabic alphabets.
 var arabicAlphabetShapes = map[rune]letterShape{
 	// Letter (ﺃ)
 	'\u0623': {Independent: '\uFE83', Initial: '\u0623', Medial: '\uFE84', Final: '\uFE84'},
@@ -141,27 +141,27 @@ var normalizable = &unicode.RangeTable{
 
 // Normalizable letters [alef/Yae/Hae]
 const (
-	//Alef  => ا
+	// Alef  => ا
 	Alef = '\u0627'
-	//AlefMad =>  آ
+	// AlefMad =>  آ
 	AlefMad = '\u0622'
-	//AlefHamzaAbove => أ
+	// AlefHamzaAbove => أ
 	AlefHamzaAbove = '\u0623'
-	//AlefHamzaBelow إ
+	// AlefHamzaBelow إ
 	AlefHamzaBelow = '\u0625'
-	//Yae =>  ي
+	// Yae =>  ي
 	Yae = '\u064A'
-	//DotlessYae =>  ى
+	// DotlessYae =>  ى
 	DotlessYae = '\u0649'
-	//TehMarbuta => ة
+	// TehMarbuta => ة
 	TehMarbuta = '\u0629'
-	//Hae => ه
+	// Hae => ه
 	Hae = '\u0647'
-	//AlefWaslah ٱ / Waslah is considered part of harakat/تَشْكِيل ?
+	// AlefWaslah ٱ / Waslah is considered part of harakat/تَشْكِيل ?
 	AlefWaslah = '\u0671'
 )
 
-//Number groups in Arabic
+// Number groups in Arabic.
 var _zeroToNine = []string{
 	"صفر", "واحد", "اثنان", "ثلاثة", "أربعة",
 	"خمسة", "ستة", "سبعة", "ثمانية", "تسعة",
@@ -183,14 +183,13 @@ var _scaleNumbers = []string{
 	"", "ألف", "مليون", "مليار",
 }
 
-//RemoveHarakat will remove harakat from arabic text
+// RemoveHarakat will remove harakat from arabic text.
 func RemoveHarakat(input string) string {
 	input = normalizeTransform(input)
 	runes := bytes.Runes([]byte(input))
 	for i := 0; i < len(runes); i++ {
-		//fmt.Println(string(runes[i]))
 		switch runes[i] {
-		//Remove Waslah from AlefWaslah / Waslah is considered part of harakat/تَشْكِيل ?
+		// Remove Waslah from AlefWaslah / Waslah is considered part of harakat/تَشْكِيل ?.
 		case AlefWaslah:
 			runes[i] = Alef
 		}
@@ -198,12 +197,11 @@ func RemoveHarakat(input string) string {
 	return string(runes)
 }
 
-//Normalize will prepare an arabic text to search and index
+// Normalize will prepare an arabic text to search and index.
 func Normalize(input string) string {
 	input = normalizeTransform(input)
 	runes := bytes.Runes([]byte(input))
 	for i := 0; i < len(runes); i++ {
-		//fmt.Println(string(runes[i]))
 		switch runes[i] {
 		//Normalizable letters
 		case AlefMad, AlefHamzaAbove, AlefHamzaBelow, AlefWaslah:
@@ -214,19 +212,18 @@ func Normalize(input string) string {
 			runes[i] = Hae
 		}
 	}
-	//@TODO: optimize runes by converting it to bytes, arabic letters use only 2 bytes
+	// @TODO: optimize runes by converting it to bytes, arabic letters use only 2 bytes
 	return string(runes)
 }
 
-// Use text/transform algorithm for faster normalization
+// normalizeTransform use text/transform algorithm for faster normalization.
 func normalizeTransform(input string) string {
-	//Use text/transform algorithm for faster normalization
 	tm := transform.Chain(runes.Remove(runes.In(normalizable)))
 	input, _, _ = transform.String(tm, input)
 	return input
 }
 
-//deleteRune will delete a rune from the slice while keeping the order of runes
+// deleteRune will delete a rune from the slice while keeping the order of runes.
 func deleteRune(runes []rune, i int) []rune {
 	if i >= len(runes) {
 		return runes
@@ -237,7 +234,6 @@ func deleteRune(runes []rune, i int) []rune {
 
 // SpellNumber will transform a number into a readable arabic version
 func SpellNumber(input int) string {
-
 	var stringOfNum []string
 
 	if input < 0 {
@@ -322,7 +318,6 @@ func Tashkeel(input string) string {
 	words := strings.Fields(input)
 	for i, word := range words {
 		// يُجَرُّ الاسم إذا سُبِق بأحد حروف جرٍّ، مثل كلمة الشركة في جملة: توجّهْتُ إلى الشركةِ
-		fmt.Println(Normalize(word))
 		if contains(JarrWords, Normalize(word)) {
 			words[i+1] += string('\u0650')
 		}
@@ -362,11 +357,9 @@ func Shape(input string) string {
 		}
 	}
 	if len(continousLangLt) > 0 {
-		fmt.Println(continousLangLt)
 		langSections = append(langSections, strings.TrimSpace(continousLangLt))
 	}
 	if len(continousLangAr) > 0 {
-		fmt.Printf("\"%s\"\n", continousLangAr)
 		langSections = append(langSections, strings.TrimSpace(continousLangAr))
 	}
 
@@ -436,10 +429,9 @@ func shapeWord(input string) string {
 	}
 
 	return reverse(shapedInputTashkeel.String())
-
 }
 
-//reverse the arabic string for RTL support in rendering
+// reverse the arabic string for RTL support in rendering.
 func reverse(s string) string {
 	runes := []rune(s)
 	for i, j := 0, len(runes)-1; i < j; i, j = i+1, j-1 {
@@ -448,22 +440,22 @@ func reverse(s string) string {
 	return string(runes)
 }
 
-//adjustLetter will adjust the arabic letter depending on its position
+// adjustLetter will adjust the arabic letter depending on its position.
 func adjustLetter(g letterGroup) rune {
 
 	switch {
-	//Inbetween 2 letters
+	// Inbetween 2 letters
 	case g.backLetter > 0 && g.frontLetter > 0:
 		if isAlwaysInitial(g.backLetter) {
 			return arabicAlphabetShapes[g.letter].Initial
 		}
 		return arabicAlphabetShapes[g.letter].Medial
 
-	//Not preceded by any letter
+	// Not preceded by any letter
 	case g.backLetter == 0 && g.frontLetter > 0:
 		return arabicAlphabetShapes[g.letter].Initial
 
-	//Not followed by any letter
+	// Not followed by any letter
 	case g.backLetter > 0 && g.frontLetter == 0:
 		if isAlwaysInitial(g.backLetter) {
 			return arabicAlphabetShapes[g.letter].Independent
@@ -475,7 +467,7 @@ func adjustLetter(g letterGroup) rune {
 	}
 }
 
-//Check if the letter is always .Initial
+// isAlwaysInitial check if the letter is always initial.
 func isAlwaysInitial(letter rune) bool {
 	alwaysInitial := [13]rune{'\u0627', '\u0623', '\u0622', '\u0625', '\u0649', '\u0621', '\u0624', '\u0629', '\u062f', '\u0630', '\u0631', '\u0632', '\u0648'}
 	for _, item := range alwaysInitial {
@@ -486,14 +478,13 @@ func isAlwaysInitial(letter rune) bool {
 	return false
 }
 
-//IsArabicLetter checks if the letter is arabic
+// IsArabicLetter checks if the letter is arabic.
 func IsArabicLetter(ch rune) bool {
 	return (ch >= 0x600 && ch <= 0x6FF)
 }
 
-//IsArabic checks if the input string contains arabic unicode only
+// IsArabic checks if the input string contains arabic unicode only.
 func IsArabic(input string) bool {
-
 	var isArabic = true
 	for _, v := range input {
 		if !unicode.IsSpace(v) && !IsArabicLetter(v) {
@@ -503,7 +494,7 @@ func IsArabic(input string) bool {
 	return isArabic
 }
 
-//ToArabicDigits will convert english numbers to arabic numbers in text
+// ToArabicDigits will convert english numbers to arabic numbers in text.
 func ToArabicDigits(input string) string {
 	return strings.NewReplacer(
 		"0", "٠",
@@ -519,7 +510,7 @@ func ToArabicDigits(input string) string {
 	).Replace(input)
 }
 
-//ToEnglishDigits will convert arabic numbers to english numbers in text
+// ToEnglishDigits will convert arabic numbers to english numbers in text.
 func ToEnglishDigits(input string) string {
 	return strings.NewReplacer(
 		"٠", "0",
