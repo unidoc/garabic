@@ -1,6 +1,6 @@
 package garabic
 
-//removeHarakatTestCases contains all test cases for TestRemoveHarakat function
+// removeHarakatTestCases contains all test cases for TestRemoveHarakat function.
 var removeHarakatTestCases = []struct {
 	description string
 	input       string
@@ -34,7 +34,7 @@ var removeHarakatTestCases = []struct {
 	},
 }
 
-//normalizeTestCases contains all test cases for TestNormalize function
+// normalizeTestCases contains all test cases for TestNormalize function.
 var normalizeTestCases = []struct {
 	description string
 	input       string
@@ -97,7 +97,7 @@ var normalizeTestCases = []struct {
 	},
 }
 
-//spellNumberTestCases contains all test cases for reading a number in arabic
+// spellNumberTestCases contains all test cases for reading a number in arabic.
 var spellNumberTestCases = []struct {
 	input    int
 	expected string
@@ -208,7 +208,7 @@ var spellNumberTestCases = []struct {
 	},
 }
 
-//tashkeelTestCases contains all test cases for adding tashkeel to arabic text
+// tashkeelTestCases contains all test cases for adding tashkeel to arabic text.
 var tashkeelTestCases = []struct {
 	description string
 	input       string
@@ -226,7 +226,7 @@ var tashkeelTestCases = []struct {
 	},
 }
 
-//shapingTestCases contains all test cases for shaping arabic text
+// shapingTestCases contains all test cases for shaping arabic text.
 var shapingTestCases = []struct {
 	description string
 	input       string
@@ -260,7 +260,7 @@ var shapingTestCases = []struct {
 	},
 }
 
-//arabicLetterTestCases
+// arabicLetterTestCases.
 var arabicLetterTestCases = []struct {
 	description string
 	input       rune
@@ -283,7 +283,7 @@ var arabicLetterTestCases = []struct {
 	},
 }
 
-// arabicWordsTestCases
+// arabicWordsTestCases.
 var arabicTextTestCases = []struct {
 	description string
 	input       string
@@ -301,7 +301,7 @@ var arabicTextTestCases = []struct {
 	},
 }
 
-// arabicNumbersTestCases
+// arabicNumbersTestCases.
 var arabicNumbersTestCases = []struct {
 	description string
 	input       string
@@ -314,7 +314,7 @@ var arabicNumbersTestCases = []struct {
 	},
 }
 
-// englishNumbersTestCases
+// englishNumbersTestCases.
 var englishNumbersTestCases = []struct {
 	description string
 	input       string
